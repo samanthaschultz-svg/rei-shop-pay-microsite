@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>For REI Co-op — A note on Shop Pay</title>
+    <meta
+      name="description"
+      content="A short look at what adding Shop Pay could add to REI Co-op's already-optimized checkout — with the math, the fit, and a calculator to size it yourself."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+/* --- Tokens --- */
+:root {
+  --green: #1f4d2c;
+  --green-deep: #163a20;
+  --rust: #c7522a;
+  --cream: #f6f1e6;
+  --cream-2: #efe8d8;
+  --paper: #fbf8f1;
+  --ink: #1a1f1a;
+  --ink-2: #3b423b;
+  --muted: #6b6f68;
+  --line: #dcd4be;
+  --shadow: 0 1px 2px rgba(20, 30, 20, 0.04), 0 6px 24px rgba(20, 30, 20, 0.06);
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.08; margin: 0 0 1.2rem; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.2; margin: 0 0 1rem; }
+h3 { font-size: 1.15rem; line-height: 1.35; margin: 0 0 0.4rem; font-weight: 600; }
+
+p { margin: 0 0 1rem; }
+a { color: var(--green); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { color: var(--rust); }
+
+sup { font-size: 0.65em; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+.container.narrow { max-width: 760px; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  color: var(--rust);
+  font-weight: 600;
+  margin: 0 0 0.8rem;
+}
+
+.muted { color: var(--muted); }
+
+/* --- Topbar --- */
+.topbar {
+  background: var(--green-deep);
+  color: var(--cream);
+}
+.topbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 28px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+.kicker, .kicker-right { opacity: 0.85; }
+
+/* --- Hero --- */
+.hero {
+  background:
+    radial-gradient(1200px 500px at 80% -20%, rgba(199, 82, 42, 0.10), transparent 60%),
+    linear-gradient(180deg, var(--cream) 0%, var(--paper) 100%);
+  padding: 90px 0 70px;
+  border-bottom: 1px solid var(--line);
+}
+.hero .accent { color: var(--green); }
+.hero .lede {
+  font-size: 1.15rem;
+  color: var(--ink-2);
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+.hero-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  max-width: 700px;
+}
+.hero-meta strong {
+  display: block;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: 2rem;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.hero-meta span {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* --- Sections --- */
+.section { padding: 80px 0; }
+.section + .section { border-top: 1px solid var(--line); }
+
+/* --- Claims --- */
+.claims {
+  list-style: none;
+  padding: 0;
+  margin: 36px 0 0;
+  display: grid;
+  gap: 28px;
+}
+.claims li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 22px;
+  align-items: start;
+  padding: 26px 28px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.claim-num {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.5rem;
+  color: var(--rust);
+  font-weight: 500;
+  line-height: 1;
+  margin-top: 4px;
+}
+.claims p { margin: 0; color: var(--ink-2); }
+
+/* --- Calculator --- */
+.calculator-section {
+  background: linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 100%);
+}
+.calc {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 36px;
+  box-shadow: var(--shadow);
+}
+.calc-inputs { display: grid; gap: 28px; }
+.calc-inputs label { display: block; }
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.label-row span:first-child {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.label-row output {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: var(--green);
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--green);
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 0 0 1px var(--green);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--green);
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 0 0 1px var(--green);
+}
+.hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.calc-output {
+  background: var(--green-deep);
+  color: var(--cream);
+  border-radius: 10px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.calc-label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  margin: 0 0 10px;
+  opacity: 0.8;
+}
+.calc-value {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 3rem;
+  line-height: 1;
+  margin: 0 0 16px;
+  color: white;
+  font-weight: 500;
+}
+.calc-sub {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+/* --- Why grid --- */
+.why .grid {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+.card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.card-num {
+  display: inline-block;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 0.9rem;
+  color: var(--rust);
+  margin-bottom: 14px;
+  letter-spacing: 0.04em;
+}
+.card p { margin: 0; color: var(--ink-2); }
+
+/* --- Implementation --- */
+.impl { background: var(--cream); }
+
+/* --- CTA --- */
+.cta {
+  text-align: center;
+  background:
+    radial-gradient(700px 300px at 50% 0%, rgba(31, 77, 44, 0.08), transparent 60%),
+    var(--paper);
+}
+.cta-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 28px 0 36px;
+}
+.btn {
+  display: inline-block;
+  padding: 14px 26px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: transform 0.06s ease, background 0.15s ease;
+}
+.btn.primary {
+  background: var(--green);
+  color: var(--cream);
+}
+.btn.primary:hover { background: var(--green-deep); color: white; transform: translateY(-1px); }
+.btn.secondary {
+  background: transparent;
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+.btn.secondary:hover { background: var(--green); color: white; }
+.signoff {
+  font-style: italic;
+  color: var(--ink-2);
+  margin-top: 20px;
+}
+.signoff .muted { font-style: normal; font-size: 0.85rem; }
+
+/* --- Footer --- */
+footer {
+  border-top: 1px solid var(--line);
+  background: var(--cream);
+  padding: 36px 0 60px;
+}
+.footnotes p {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+.fineprint { margin-top: 18px !important; opacity: 0.8; }
+
+/* --- Responsive --- */
+@media (max-width: 760px) {
+  .topbar-inner { font-size: 0.7rem; }
+  .hero { padding: 60px 0 50px; }
+  .hero-meta { grid-template-columns: 1fr; gap: 18px; }
+  .calc { grid-template-columns: 1fr; padding: 24px; }
+  .why .grid { grid-template-columns: 1fr; }
+  .claims li { padding: 22px 20px; gap: 16px; }
+  .section { padding: 60px 0; }
+}
+
+  </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="topbar-inner">
+        <span class="kicker">A note for REI Co-op</span>
+        <span class="kicker-right">From Samantha Schultz · Shopify</span>
+      </div>
+    </div>
+
+    <header class="hero">
+      <div class="container">
+        <p class="eyebrow">Checkout</p>
+        <h1>
+          Your checkout is sharper than ever.<br />
+          <span class="accent">Here's what Shop Pay could add on top.</span>
+        </h1>
+        <p class="lede">
+          You've just put real work into optimizing the REI checkout — that's the hardest part. Adding
+          Shop Pay alongside it is the smaller move that compounds the result. No replatform, no rebuild.
+          A few weeks of work, a network of 250M+ recognized buyers, and the best-converting accelerated
+          checkout on the internet.
+        </p>
+        <div class="hero-meta">
+          <div>
+            <strong>~$850M</strong>
+            <span>REI online GMV</span>
+          </div>
+          <div>
+            <strong>50%</strong>
+            <span>Shop Pay lift vs. guest checkout<sup>1</sup></span>
+          </div>
+          <div>
+            <strong>+10%</strong>
+            <span>vs. other accelerated checkouts<sup>2</sup></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- The published numbers -->
+      <section class="section">
+        <div class="container narrow">
+          <p class="eyebrow">The numbers, plainly</p>
+          <h2>Three claims worth checking</h2>
+          <p class="muted">
+            We'd rather you verify these than take them at face value. Sources are linked.
+          </p>
+
+          <ol class="claims">
+            <li>
+              <span class="claim-num">01</span>
+              <div>
+                <h3>Shop Pay converts ~50% better than guest checkout.</h3>
+                <p>
+                  This holds across categories Shopify has measured. The mechanism is simple — buyers
+                  in the Shop Pay network are recognized at checkout and skip ~6 form fields.
+                  <a
+                    href="https://www.shopify.com/shop-pay"
+                    target="_blank"
+                    rel="noreferrer"
+                    >Shopify, Shop Pay overview</a
+                  >.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span class="claim-num">02</span>
+              <div>
+                <h3>It outpaces other accelerated checkouts by at least 10%.</h3>
+                <p>
+                  Verified in an external study by a Big Three management consulting firm — comparing
+                  Shop Pay against Apple Pay, Google Pay, PayPal, and others on identical sessions.
+                  <a
+                    href="https://www.shopify.com/shop-pay"
+                    target="_blank"
+                    rel="noreferrer"
+                    >Source</a
+                  >.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span class="claim-num">03</span>
+              <div>
+                <h3>Shop Pay Installments lifts AOV ~50% for many merchants.</h3>
+                <p>
+                  Most relevant for higher-ticket gear — bikes, paddle boards, tents, ski packages. Buy-now-pay-later
+                  without the merchant carrying credit risk.
+                  <a
+                    href="https://www.shopify.com/shop-pay/installments"
+                    target="_blank"
+                    rel="noreferrer"
+                    >Shop Pay Installments</a
+                  >.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Calculator -->
+      <section class="section calculator-section">
+        <div class="container narrow">
+          <p class="eyebrow">Size it yourself</p>
+          <h2>What the lift might look like at REI's scale</h2>
+          <p class="muted">
+            Adjust the assumptions. The point of this isn't a single number — it's a sense of the order
+            of magnitude. We've defaulted to conservative inputs.
+          </p>
+
+          <div class="calc">
+            <div class="calc-inputs">
+              <label>
+                <span class="label-row">
+                  <span>Annual online GMV</span>
+                  <output id="gmvOut">$850M</output>
+                </span>
+                <input
+                  id="gmv"
+                  type="range"
+                  min="100"
+                  max="2000"
+                  step="25"
+                  value="850"
+                />
+              </label>
+
+              <label>
+                <span class="label-row">
+                  <span>% of buyers who'd opt into Shop Pay</span>
+                  <output id="adoptOut">25%</output>
+                </span>
+                <input
+                  id="adopt"
+                  type="range"
+                  min="5"
+                  max="60"
+                  step="1"
+                  value="25"
+                />
+                <small class="hint">
+                  Industry adoption typically lands in the 20–40% range once Shop Pay is offered alongside
+                  existing wallets.
+                </small>
+              </label>
+
+              <label>
+                <span class="label-row">
+                  <span>Conversion lift on those sessions</span>
+                  <output id="liftOut">10%</output>
+                </span>
+                <input
+                  id="lift"
+                  type="range"
+                  min="3"
+                  max="50"
+                  step="1"
+                  value="10"
+                />
+                <small class="hint">
+                  10% is the floor vs. other accelerated checkouts. 50% is the ceiling vs. guest checkout.
+                </small>
+              </label>
+            </div>
+
+            <div class="calc-output">
+              <p class="calc-label">Estimated incremental annual revenue</p>
+              <p class="calc-value"><span id="resultValue">$21.3M</span></p>
+              <p class="calc-sub">
+                Based on lift applied to the share of GMV from Shop Pay sessions. Doesn't include AOV
+                gains from Shop Pay Installments, which would stack on top.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why it fits REI -->
+      <section class="section why">
+        <div class="container">
+          <p class="eyebrow">Why this fits REI specifically</p>
+          <h2>Four reasons we think the conversation is worth having</h2>
+
+          <div class="grid">
+            <article class="card">
+              <span class="card-num">01</span>
+              <h3>Your buyers are already in the network.</h3>
+              <p>
+                Shop Pay's 250M+ recognized buyers skew heavily toward outdoor and active categories —
+                the same audience filling REI carts on a Saturday morning. They're recognized the moment
+                they hit checkout. No password, no form, no friction.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="card-num">02</span>
+              <h3>Mobile is where the math really moves.</h3>
+              <p>
+                Shop Pay's biggest lift shows up on mobile, where typing addresses on a phone is the single
+                largest source of cart abandonment. For an REI customer browsing during a hike or on a
+                lunch break, one-tap checkout is the difference between a sale and a "later."
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="card-num">03</span>
+              <h3>Installments fits a high-ticket assortment.</h3>
+              <p>
+                A $2,400 e-bike or a $700 tent is exactly where Shop Pay Installments earns its keep —
+                lifting AOV without REI taking on credit risk. Merchants regularly see 25–50% AOV gains
+                on eligible orders.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="card-num">04</span>
+              <h3>It's the only carbon-neutral way to pay online.</h3>
+              <p>
+                Every Shop Pay order has its emissions offset through Shopify's Sustainability Fund. For a
+                co-op whose members already opt outside on Black Friday, the values fit isn't a stretch —
+                it's the most natural payment story REI could tell.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementation -->
+      <section class="section impl">
+        <div class="container narrow">
+          <p class="eyebrow">What it actually takes</p>
+          <h2>This isn't a replatform conversation.</h2>
+          <p>
+            Shop Pay can be added as a payment option alongside REI's existing checkout stack via
+            Shop Pay Component or Shop Pay Checkout — both designed for non-Shopify merchants. Typical
+            integrations land in <strong>4–8 weeks</strong> with a small dedicated team. Shopify's
+            integration team partners directly through go-live.
+          </p>
+          <p class="muted">
+            Happy to walk through the specifics — including how the integration would map onto REI's
+            existing checkout architecture.
+          </p>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section cta">
+        <div class="container narrow">
+          <h2>If this lands and Shop Pay is still of interest, let's talk.</h2>
+          <p>
+            A working session to map out next steps, define the path to implementation, and tighten up
+            a business case grounded in REI's actual traffic and assortment — not generic benchmarks.
+          </p>
+          <div class="cta-actions">
+            <a class="btn primary" href="mailto:samantha.schultz@shopify.com?subject=REI%20%2B%20Shop%20Pay%20%E2%80%94%20a%20conversation">
+              Reply to Samantha
+            </a>
+            <a class="btn secondary" href="https://www.shopify.com/shop-pay" target="_blank" rel="noreferrer">
+              Read the Shop Pay deep-dive
+            </a>
+          </div>
+          <p class="signoff">
+            — Samantha Schultz<br />
+            <span class="muted">Lead Account Executive, Enterprise · Shopify</span>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container narrow footnotes">
+        <p>
+          <sup>1</sup> Shop Pay vs. guest checkout, across categories Shopify has measured. See
+          <a href="https://www.shopify.com/shop-pay" target="_blank" rel="noreferrer">shopify.com/shop-pay</a>.
+        </p>
+        <p>
+          <sup>2</sup> External study by a Big Three management consulting firm comparing Shop Pay
+          against other accelerated checkouts on identical sessions.
+        </p>
+        <p class="fineprint">
+          This page is an internal Shopify document prepared for REI Co-op. Numbers and integration
+          timelines are illustrative; specifics will be tailored to REI's actual checkout architecture
+          and traffic mix.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+// Interactive calculator for the prospecting page.
+// Inputs: GMV ($M), adoption rate (%), conversion lift (%).
+// Output: incremental annual revenue, computed as GMV × adoption × lift.
+
+const $ = (id) => document.getElementById(id);
+
+const gmv = $("gmv");
+const adopt = $("adopt");
+const lift = $("lift");
+
+const gmvOut = $("gmvOut");
+const adoptOut = $("adoptOut");
+const liftOut = $("liftOut");
+const result = $("resultValue");
+
+const fmtMoney = (millions) => {
+  if (millions >= 1000) {
+    return `$${(millions / 1000).toFixed(2)}B`;
+  }
+  if (millions >= 100) {
+    return `$${Math.round(millions)}M`;
+  }
+  return `$${millions.toFixed(1)}M`;
+};
+
+const fmtGmv = (m) => (m >= 1000 ? `$${(m / 1000).toFixed(2)}B` : `$${m}M`);
+
+function recalc() {
+  const g = +gmv.value;       // millions
+  const a = +adopt.value / 100;
+  const l = +lift.value / 100;
+
+  // Revenue from Shop Pay sessions, lifted by `l`.
+  // Incremental = GMV × adoption × lift.
+  const incremental = g * a * l;
+
+  gmvOut.textContent = fmtGmv(g);
+  adoptOut.textContent = `${adopt.value}%`;
+  liftOut.textContent = `${lift.value}%`;
+  result.textContent = fmtMoney(incremental);
+}
+
+[gmv, adopt, lift].forEach((el) => el.addEventListener("input", recalc));
+recalc();
+
+    </script>
+  </body>
+</html>
